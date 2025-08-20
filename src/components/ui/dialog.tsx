@@ -17,7 +17,9 @@ export function DialogContent({ className, ...props }: DialogPrimitive.DialogCon
           className
         )}
         {...props}
-      />
+      >
+        {props.children}
+      </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
   );
 }
@@ -39,4 +41,3 @@ export function DialogCloseButton({ onClick }: { onClick?: () => void }) {
     </DialogClose>
   );
 }
-

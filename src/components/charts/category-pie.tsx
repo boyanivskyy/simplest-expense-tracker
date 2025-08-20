@@ -5,7 +5,15 @@ import { api } from "@/../convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 
-const COLORS = ["#0ea5e9", "#22c55e", "#f97316", "#ef4444", "#a855f7", "#14b8a6"];
+// Muted, dark-theme-friendly palette (with alpha)
+const COLORS = [
+  "rgba(14,165,233,0.6)", // sky-500
+  "rgba(34,197,94,0.6)",  // green-500
+  "rgba(249,115,22,0.6)", // orange-500
+  "rgba(239,68,68,0.6)",  // red-500
+  "rgba(168,85,247,0.6)", // violet-500
+  "rgba(20,184,166,0.6)", // teal-500
+];
 
 export function CategoryPie() {
   const [mounted, setMounted] = useState(false);
@@ -30,17 +38,17 @@ export function CategoryPie() {
       <CardHeader>
         <CardTitle>Spend by Category (30d)</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="h-full">
         {!mounted ? (
-          <div className="h-80 flex items-center justify-center text-sm text-foreground/60">
+          <div className="h-full flex items-center justify-center text-sm text-foreground/60">
             Loading chart...
           </div>
         ) : data.length === 0 ? (
-          <div className="h-80 flex items-center justify-center text-sm text-foreground/60">
+          <div className="h-full flex items-center justify-center text-sm text-foreground/60">
             No data yet.
           </div>
         ) : (
-          <div className="h-80">
+          <div className="h-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Tooltip formatter={(v: number) => `$${v.toFixed(2)}`} />

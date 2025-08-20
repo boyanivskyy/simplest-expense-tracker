@@ -21,12 +21,12 @@ export function ExpensesList() {
   }
   const items = useQuery(api.expenses.list, {}) || [];
   return (
-    <Card className="h-full">
+    <Card className="h-full flex flex-col">
       <CardHeader>
         <CardTitle>Recent Expenses</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3 max-h-[520px] overflow-auto pr-1">
+      <CardContent className="flex-1 min-h-0">
+        <div className="space-y-3 h-full overflow-auto pr-1">
           {items.length === 0 ? (
             <div className="text-sm text-foreground/60">No expenses yet.</div>
           ) : (
