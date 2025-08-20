@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -23,26 +22,41 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-const defaultCategories = [
-	"Food",
-	"Transport",
-	"Housing",
-	"Entertainment",
-	"Utilities",
-	"Shopping",
-	"Health",
-	"Other",
-];
+type ExpenseInit = {
+	id?: string;
+	amount?: number;
+	category?: string;
+	note?: string;
+	date?: number; // epoch ms
+};
 
-export function AddExpense() {
-	if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-		return (
-			<Button className="w-full" disabled>
-				Add Expense
-			</Button>
-		);
-	}
+export function ExpenseDialog({
+	trigger,
+	initial,
+}: {
+	trigger?: React.ReactNode;
+	initial?: ExpenseInit;
+}) {
+	const canUseConvex = Boolean(process.env.NEXT_PUBLIC_CONVEX_URL);
+	const isEdit = Boolean(initial?.id);
+
 	const add = useMutation(api.expenses.add);
+	const update = useMutation(api.expenses.update);
+
+	const categories = useMemo(
+		() => [
+			"Food",
+			"Transport",
+			"Housing",
+			"Entertainment",
+			"Utilities",
+			"Shopping",
+			"Health",
+			"Other",
+		],
+		[]
+	);
+
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [amount, setAmount] = useState("");
@@ -52,34 +66,62 @@ export function AddExpense() {
 	);
 	const [note, setNote] = useState("");
 
+	// Initialize state when opening or when `initial` changes
+	useEffect(() => {
+		if (open) {
+			setAmount(initial?.amount != null ? String(initial.amount) : "");
+			setCategory(initial?.category || "Other");
+			setDate(
+				initial?.date
+					? new Date(initial.date).toISOString().slice(0, 10)
+					: new Date().toISOString().slice(0, 10)
+			);
+			setNote(initial?.note || "");
+		}
+	}, [open, initial]);
+
 	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		const value = parseFloat(amount);
 		if (Number.isNaN(value) || value <= 0) return;
 		setLoading(true);
 		try {
-			await add({
-				amount: value,
-				category,
-				note: note || undefined,
-				date: new Date(date).getTime(),
-			});
+			if (isEdit && initial?.id) {
+				await update({
+					id: initial.id as any,
+					amount: value,
+					category,
+					note: note || undefined,
+					date: new Date(date).getTime(),
+				});
+			} else {
+				await add({
+					amount: value,
+					category,
+					note: note || undefined,
+					date: new Date(date).getTime(),
+				});
+			}
 			setOpen(false);
-			setAmount("");
-			setNote("");
 		} finally {
 			setLoading(false);
 		}
 	}
 
+	const DefaultTrigger = (
+		<Button className="w-full" disabled={!canUseConvex}>
+			{isEdit ? "Edit Expense" : "Add Expense"}
+		</Button>
+	);
+
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger asChild>
-				<Button className="w-full">Add Expense</Button>
-			</DialogTrigger>
+			<DialogTrigger asChild>{trigger ?? DefaultTrigger}</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Add Expense</DialogTitle>
+					<DialogTitle>
+						{isEdit ? "Edit Expense" : "Add Expense"}
+					</DialogTitle>
 					<DialogCloseButton onClick={() => setOpen(false)} />
 				</DialogHeader>
 				<form onSubmit={onSubmit} className="space-y-3">
@@ -99,11 +141,11 @@ export function AddExpense() {
 					<div className="grid gap-1.5">
 						<Label htmlFor="category">Category</Label>
 						<Select value={category} onValueChange={setCategory}>
-							<SelectTrigger>
+							<SelectTrigger id="category">
 								<SelectValue placeholder="Select a category" />
 							</SelectTrigger>
 							<SelectContent>
-								{defaultCategories.map((c) => (
+								{categories.map((c) => (
 									<SelectItem key={c} value={c}>
 										{c}
 									</SelectItem>
@@ -131,10 +173,18 @@ export function AddExpense() {
 						/>
 					</div>
 					<Button type="submit" disabled={loading} className="w-full">
-						{loading ? "Adding..." : "Add"}
+						{loading
+							? isEdit
+								? "Saving..."
+								: "Adding..."
+							: isEdit
+								? "Save"
+								: "Add"}
 					</Button>
 				</form>
 			</DialogContent>
 		</Dialog>
 	);
 }
+
+export default ExpenseDialog;

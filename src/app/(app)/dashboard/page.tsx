@@ -1,6 +1,6 @@
 import { CategoryPie } from "@/components/charts/category-pie";
 import { DailyBar } from "@/components/charts/daily-bar";
-import { AddExpense } from "@/components/expenses/add-expense";
+import ExpenseDialog from "@/components/expenses/expense-dialog";
 import { ExpensesList } from "@/components/expenses/expenses-list";
 
 export const dynamic = "force-dynamic";
@@ -13,10 +13,9 @@ export default function DashboardPage() {
         <CategoryPie />
       </div>
       <div className="lg:col-span-1 space-y-4">
-        <AddExpense />
+        <ExpenseDialog />
         <ExpensesList />
       </div>
     </div>
   );
 }
-

@@ -95,3 +95,27 @@ export const byDay = query({
 			.sort((a, b) => a.date.localeCompare(b.date));
 	},
 });
+
+export const update = mutation({
+	args: {
+		id: v.id("expenses"),
+		amount: v.number(),
+		category: v.string(),
+		note: v.optional(v.string()),
+		date: v.number(),
+	},
+	handler: async (ctx, args) => {
+		const identity = await ctx.auth.getUserIdentity();
+		if (!identity) throw new Error("Not authenticated");
+		const existing = await ctx.db.get(args.id);
+		if (!existing) throw new Error("Expense not found");
+		if (existing.userId !== identity.subject) throw new Error("Forbidden");
+		await ctx.db.patch(args.id, {
+			amount: args.amount,
+			category: args.category,
+			note: args.note,
+			date: args.date,
+		});
+		return args.id;
+	},
+});
