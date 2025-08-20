@@ -34,7 +34,7 @@ export function CategoryPie() {
   const data = useQuery(api.expenses.byCategory, { days: 30 }) || [];
   const total = data.reduce((s: number, d: any) => s + (d.value || 0), 0);
   return (
-    <Card>
+    <Card className="h-full min-h-[300px]">
       <CardHeader>
         <CardTitle>Spend by Category (30d)</CardTitle>
       </CardHeader>

@@ -28,8 +28,10 @@ export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLD
   return <div className={cn("mb-2 flex items-center justify-between", className)} {...props} />;
 }
 
-export function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("text-base font-semibold", className)} {...props} />;
+export function DialogTitle({ className, ...props }: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>) {
+  return (
+    <DialogPrimitive.Title className={cn("text-base font-semibold", className)} {...props} />
+  );
 }
 
 export function DialogCloseButton({ onClick }: { onClick?: () => void }) {

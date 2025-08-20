@@ -16,11 +16,11 @@ export function DailyBar() {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => setMounted(true), []);
 	if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-		return (
-			<Card>
-				<CardHeader>
-					<CardTitle>Daily Spend (14d)</CardTitle>
-				</CardHeader>
+  return (
+    <Card className="h-full min-h-[300px]">
+      <CardHeader>
+        <CardTitle>Daily Spend (14d)</CardTitle>
+      </CardHeader>
 				<CardContent className="h-80 flex items-center justify-center text-sm text-foreground/60">
 					Configure NEXT_PUBLIC_CONVEX_URL to see data.
 				</CardContent>
