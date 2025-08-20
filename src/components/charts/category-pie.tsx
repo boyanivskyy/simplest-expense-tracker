@@ -51,7 +51,14 @@ export function CategoryPie() {
           <div className="flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Tooltip formatter={(v: number) => `$${v.toFixed(2)}`} />
+                <Tooltip
+                  formatter={(v: number) => `$${v.toFixed(2)}`}
+                  contentStyle={{
+                    backgroundColor: "rgba(0,0,0,0.85)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    color: "#fff",
+                  }}
+                />
                 <Pie dataKey="value" data={data} cx="50%" cy="50%" outerRadius={100} label>
                   {data.map((_, idx) => (
                     <Cell key={idx} fill={COLORS[idx % COLORS.length]} />

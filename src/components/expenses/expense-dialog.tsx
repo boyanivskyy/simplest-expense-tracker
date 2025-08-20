@@ -21,6 +21,17 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Plus,
+	Utensils,
+	Car,
+	Home,
+	Music,
+	Zap,
+	ShoppingCart,
+	HeartPulse,
+	Tag,
+} from "lucide-react";
 
 type ExpenseInit = {
 	id?: string;
@@ -56,6 +67,33 @@ export function ExpenseDialog({
 		],
 		[]
 	);
+
+	const CategoryIcon = ({
+		name,
+		className,
+	}: {
+		name: string;
+		className?: string;
+	}) => {
+		switch (name) {
+			case "Food":
+				return <Utensils className={className} />;
+			case "Transport":
+				return <Car className={className} />;
+			case "Housing":
+				return <Home className={className} />;
+			case "Entertainment":
+				return <Music className={className} />;
+			case "Utilities":
+				return <Zap className={className} />;
+			case "Shopping":
+				return <ShoppingCart className={className} />;
+			case "Health":
+				return <HeartPulse className={className} />;
+			default:
+				return <Tag className={className} />;
+		}
+	};
 
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -110,7 +148,10 @@ export function ExpenseDialog({
 
 	const DefaultTrigger = (
 		<Button className="w-full" disabled={!canUseConvex}>
-			{isEdit ? "Edit Expense" : "Add Expense"}
+			<span className="inline-flex items-center gap-2">
+				{isEdit ? null : <Plus className="h-4 w-4" />}
+				{isEdit ? "Edit Expense" : "Add Expense"}
+			</span>
 		</Button>
 	);
 
@@ -142,12 +183,20 @@ export function ExpenseDialog({
 						<Label htmlFor="category">Category</Label>
 						<Select value={category} onValueChange={setCategory}>
 							<SelectTrigger id="category">
-								<SelectValue placeholder="Select a category" />
+								<span className="flex items-center gap-2">
+									<SelectValue placeholder="Select a category" />
+								</span>
 							</SelectTrigger>
 							<SelectContent>
 								{categories.map((c) => (
 									<SelectItem key={c} value={c}>
-										{c}
+										<span className="flex items-center gap-2">
+											<CategoryIcon
+												name={c}
+												className="h-4 w-4"
+											/>
+											<span>{c}</span>
+										</span>
 									</SelectItem>
 								))}
 							</SelectContent>

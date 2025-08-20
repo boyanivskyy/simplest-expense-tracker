@@ -3,7 +3,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Pencil, Utensils, Car, Home, Music, Zap, ShoppingCart, HeartPulse, Tag } from "lucide-react";
 import ExpenseDialog from "@/components/expenses/expense-dialog";
 
 export function ExpensesList() {
@@ -20,6 +20,26 @@ export function ExpensesList() {
     );
   }
   const items = useQuery(api.expenses.list, {}) || [];
+  const CategoryIcon = ({ name, className }: { name: string; className?: string }) => {
+    switch (name) {
+      case "Food":
+        return <Utensils className={className} />;
+      case "Transport":
+        return <Car className={className} />;
+      case "Housing":
+        return <Home className={className} />;
+      case "Entertainment":
+        return <Music className={className} />;
+      case "Utilities":
+        return <Zap className={className} />;
+      case "Shopping":
+        return <ShoppingCart className={className} />;
+      case "Health":
+        return <HeartPulse className={className} />;
+      default:
+        return <Tag className={className} />;
+    }
+  };
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
@@ -33,7 +53,10 @@ export function ExpensesList() {
             items.map((e: any) => (
               <div key={e._id} className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <div className="text-sm font-medium truncate">{e.category}</div>
+                  <div className="text-sm font-medium truncate flex items-center gap-2">
+                    <CategoryIcon name={e.category} className="h-4 w-4" />
+                    <span className="truncate">{e.category}</span>
+                  </div>
                   <div className="text-xs text-foreground/60 truncate">
                     {new Date(e.date).toLocaleDateString()} {e.note ? `• ${e.note}` : ""}
                   </div>

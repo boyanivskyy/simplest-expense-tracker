@@ -10,7 +10,7 @@ import {
 import { useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export function DailyBar() {
 	const [mounted, setMounted] = useState(false);
@@ -28,6 +28,9 @@ export function DailyBar() {
     );
   }
 	const data = useQuery(api.expenses.byDay, { days: 14 }) || [];
+	const ticks = useMemo(() => {
+		return data.map((d: any) => d.date);
+	}, [data]);
 	return (
 		<Card className="h-full min-h-[300px] flex flex-col">
 			<CardHeader>
@@ -46,13 +49,30 @@ export function DailyBar() {
 					<div className="flex-1 min-h-0">
 						<ResponsiveContainer width="100%" height="100%">
 							<BarChart data={data}>
-								<XAxis dataKey="date" hide />
+								<XAxis
+									dataKey="date"
+									ticks={ticks}
+									tickMargin={8}
+									tick={{ fill: "currentColor", fontSize: 12, opacity: 0.7 }}
+									tickFormatter={(v: string) => {
+										const d = new Date(v);
+										return `${d.getMonth() + 1}/${d.getDate()}`;
+									}}
+								/>
 								<YAxis hide />
 								<Tooltip
 									formatter={(v: number) =>
 										`$${v.toFixed(2)}`
 									}
-									labelFormatter={() => ""}
+									labelFormatter={(v: string) => {
+										const d = new Date(v);
+										return d.toLocaleDateString();
+									}}
+									contentStyle={{
+										backgroundColor: "rgba(0,0,0,0.85)",
+										border: "1px solid rgba(255,255,255,0.12)",
+										color: "#fff",
+									}}
 								/>
 								<Bar
 									dataKey="amount"
