@@ -34,21 +34,21 @@ export function CategoryPie() {
   const data = useQuery(api.expenses.byCategory, { days: 30 }) || [];
   const total = data.reduce((s: number, d: any) => s + (d.value || 0), 0);
   return (
-    <Card className="h-full min-h-[300px]">
+    <Card className="h-full min-h-[300px] flex flex-col">
       <CardHeader>
         <CardTitle>Spend by Category (30d)</CardTitle>
       </CardHeader>
-      <CardContent className="h-full">
+      <CardContent className="flex-1 min-h-0 flex flex-col">
         {!mounted ? (
-          <div className="h-full flex items-center justify-center text-sm text-foreground/60">
+          <div className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
             Loading chart...
           </div>
         ) : data.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-sm text-foreground/60">
+          <div className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
             No data yet.
           </div>
         ) : (
-          <div className="h-full">
+          <div className="flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Tooltip formatter={(v: number) => `$${v.toFixed(2)}`} />

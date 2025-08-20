@@ -15,35 +15,35 @@ import { useEffect, useState } from "react";
 export function DailyBar() {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => setMounted(true), []);
-	if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-  return (
-    <Card className="h-full min-h-[300px]">
-      <CardHeader>
-        <CardTitle>Daily Spend (14d)</CardTitle>
-      </CardHeader>
-				<CardContent className="h-80 flex items-center justify-center text-sm text-foreground/60">
-					Configure NEXT_PUBLIC_CONVEX_URL to see data.
-				</CardContent>
-			</Card>
-		);
-	}
+  if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
+    return (
+      <Card className="h-full min-h-[300px] flex flex-col">
+        <CardHeader>
+          <CardTitle>Daily Spend (14d)</CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
+          Configure NEXT_PUBLIC_CONVEX_URL to see data.
+        </CardContent>
+      </Card>
+    );
+  }
 	const data = useQuery(api.expenses.byDay, { days: 14 }) || [];
 	return (
-		<Card>
+		<Card className="h-full min-h-[300px] flex flex-col">
 			<CardHeader>
 				<CardTitle>Daily Spend (14d)</CardTitle>
 			</CardHeader>
-			<CardContent className="h-full ">
+			<CardContent className="flex-1 min-h-0 flex flex-col">
 				{!mounted ? (
-					<div className="h-full flex items-center justify-center text-sm text-foreground/60">
+					<div className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
 						Loading chart...
 					</div>
 				) : data.length === 0 ? (
-					<div className="h-full flex items-center justify-center text-sm text-foreground/60">
+					<div className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
 						No data yet.
 					</div>
 				) : (
-					<div className="h-full ">
+					<div className="flex-1 min-h-0">
 						<ResponsiveContainer width="100%" height="100%">
 							<BarChart data={data}>
 								<XAxis dataKey="date" hide />

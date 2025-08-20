@@ -6,3 +6,4 @@ Project Rules
 
 - SSR/Hydration: For complex client-only visualizations (e.g., Recharts), render after mount to avoid hydration mismatches.
 
+- Layout rule: Prefer Flexbox over CSS Grid across the app. Use `flex`, `flex-col`, `flex-1`, and `min-h-0` patterns to manage sizes and scrolling. If a layout need seems to require grid, implement a flex-based workaround instead; no grid usage.
