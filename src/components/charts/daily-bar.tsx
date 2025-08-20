@@ -77,6 +77,7 @@ export function DailyBar() {
 										border: "1px solid rgba(255,255,255,0.12)",
 										color: "#fff",
 									}}
+									cursor={{ fill: "rgba(255,255,255,0.15)" }}
 								/>
 								<Bar
 									dataKey="amount"
