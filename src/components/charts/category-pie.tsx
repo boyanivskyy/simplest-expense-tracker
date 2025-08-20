@@ -58,6 +58,8 @@ export function CategoryPie() {
                     border: "1px solid rgba(255,255,255,0.12)",
                     color: "#fff",
                   }}
+                  labelStyle={{ color: "rgba(255,255,255,0.9)" }}
+                  itemStyle={{ color: "rgba(255,255,255,0.9)" }}
                 />
                 <Pie dataKey="value" data={data} cx="50%" cy="50%" outerRadius={100} label>
                   {data.map((_, idx) => (

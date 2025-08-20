@@ -15,18 +15,18 @@ import { useEffect, useMemo, useState } from "react";
 export function DailyBar() {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => setMounted(true), []);
-  if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-    return (
-      <Card className="h-full min-h-[300px] flex flex-col">
-        <CardHeader>
-          <CardTitle>Daily Spend (14d)</CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
-          Configure NEXT_PUBLIC_CONVEX_URL to see data.
-        </CardContent>
-      </Card>
-    );
-  }
+	if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
+		return (
+			<Card className="h-full min-h-[300px] flex flex-col">
+				<CardHeader>
+					<CardTitle>Daily Spend (14d)</CardTitle>
+				</CardHeader>
+				<CardContent className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
+					Configure NEXT_PUBLIC_CONVEX_URL to see data.
+				</CardContent>
+			</Card>
+		);
+	}
 	const data = useQuery(api.expenses.byDay, { days: 14 }) || [];
 	const ticks = useMemo(() => {
 		return data.map((d: any) => d.date);
@@ -53,7 +53,11 @@ export function DailyBar() {
 									dataKey="date"
 									ticks={ticks}
 									tickMargin={8}
-									tick={{ fill: "currentColor", fontSize: 12, opacity: 0.7 }}
+									tick={{
+										fill: "currentColor",
+										fontSize: 12,
+										opacity: 0.7,
+									}}
 									tickFormatter={(v: string) => {
 										const d = new Date(v);
 										return `${d.getMonth() + 1}/${d.getDate()}`;
