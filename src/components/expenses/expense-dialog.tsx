@@ -32,6 +32,7 @@ import {
 	HeartPulse,
 	Tag,
 } from "lucide-react";
+import { Doc } from "../../../convex/_generated/dataModel";
 
 type ExpenseInit = {
 	id?: string;
@@ -126,7 +127,7 @@ export function ExpenseDialog({
 		try {
 			if (isEdit && initial?.id) {
 				await update({
-					id: initial.id as any,
+					id: initial.id as Doc<"expenses">["_id"],
 					amount: value,
 					category,
 					note: note || undefined,

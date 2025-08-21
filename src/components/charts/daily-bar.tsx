@@ -14,7 +14,15 @@ import { useEffect, useMemo, useState } from "react";
 
 export function DailyBar() {
 	const [mounted, setMounted] = useState(false);
+
+	const data = useQuery(api.expenses.byDay, { days: 14 }) || [];
+
+	const ticks = useMemo(() => {
+		return data.map((d) => d.date);
+	}, [data]);
+
 	useEffect(() => setMounted(true), []);
+
 	if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
 		return (
 			<Card className="h-full min-h-[300px] flex flex-col">
@@ -27,10 +35,7 @@ export function DailyBar() {
 			</Card>
 		);
 	}
-	const data = useQuery(api.expenses.byDay, { days: 14 }) || [];
-	const ticks = useMemo(() => {
-		return data.map((d: any) => d.date);
-	}, [data]);
+
 	return (
 		<Card className="h-full min-h-[300px] flex flex-col">
 			<CardHeader>

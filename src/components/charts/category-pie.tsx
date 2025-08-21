@@ -1,4 +1,5 @@
 "use client";
+
 import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
@@ -7,71 +8,91 @@ import { useEffect, useState } from "react";
 
 // Muted, dark-theme-friendly palette (with alpha)
 const COLORS = [
-  "rgba(14,165,233,0.6)", // sky-500
-  "rgba(34,197,94,0.6)",  // green-500
-  "rgba(249,115,22,0.6)", // orange-500
-  "rgba(239,68,68,0.6)",  // red-500
-  "rgba(168,85,247,0.6)", // violet-500
-  "rgba(20,184,166,0.6)", // teal-500
+	"rgba(14,165,233,0.6)", // sky-500
+	"rgba(34,197,94,0.6)", // green-500
+	"rgba(249,115,22,0.6)", // orange-500
+	"rgba(239,68,68,0.6)", // red-500
+	"rgba(168,85,247,0.6)", // violet-500
+	"rgba(20,184,166,0.6)", // teal-500
 ];
 
 export function CategoryPie() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  // If Convex URL isn't configured, show placeholder
-  if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Spend by Category (30d)</CardTitle>
-        </CardHeader>
-        <CardContent className="h-80 flex items-center justify-center text-sm text-foreground/60">
-          Configure NEXT_PUBLIC_CONVEX_URL to see data.
-        </CardContent>
-      </Card>
-    );
-  }
-  const data = useQuery(api.expenses.byCategory, { days: 30 }) || [];
-  const total = data.reduce((s: number, d: any) => s + (d.value || 0), 0);
-  return (
-    <Card className="h-full min-h-[300px] flex flex-col">
-      <CardHeader>
-        <CardTitle>Spend by Category (30d)</CardTitle>
-      </CardHeader>
-      <CardContent className="flex-1 min-h-0 flex flex-col">
-        {!mounted ? (
-          <div className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
-            Loading chart...
-          </div>
-        ) : data.length === 0 ? (
-          <div className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
-            No data yet.
-          </div>
-        ) : (
-          <div className="flex-1 min-h-0">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Tooltip
-                  formatter={(v: number) => `$${v.toFixed(2)}`}
-                  contentStyle={{
-                    backgroundColor: "rgba(0,0,0,0.85)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    color: "#fff",
-                  }}
-                  labelStyle={{ color: "rgba(255,255,255,0.9)" }}
-                  itemStyle={{ color: "rgba(255,255,255,0.9)" }}
-                />
-                <Pie dataKey="value" data={data} cx="50%" cy="50%" outerRadius={100} label>
-                  {data.map((_, idx) => (
-                    <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-        <div className="mt-3 text-sm text-foreground/70">Total: ${total.toFixed(2)}</div>
-      </CardContent>
-    </Card>
-  );
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => setMounted(true), []);
+	const data = useQuery(api.expenses.byCategory, { days: 30 }) || [];
+
+	// If Convex URL isn't configured, show placeholder
+	if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
+		return (
+			<Card>
+				<CardHeader>
+					<CardTitle>Spend by Category (30d)</CardTitle>
+				</CardHeader>
+				<CardContent className="h-80 flex items-center justify-center text-sm text-foreground/60">
+					Configure NEXT_PUBLIC_CONVEX_URL to see data.
+				</CardContent>
+			</Card>
+		);
+	}
+
+	const total = data.reduce((s: number, d) => s + (d.value || 0), 0);
+	return (
+		<Card className="h-full min-h-[300px] flex flex-col">
+			<CardHeader>
+				<CardTitle>Spend by Category (30d)</CardTitle>
+			</CardHeader>
+			<CardContent className="flex-1 min-h-0 flex flex-col">
+				{!mounted ? (
+					<div className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
+						Loading chart...
+					</div>
+				) : data.length === 0 ? (
+					<div className="flex-1 min-h-0 flex items-center justify-center text-sm text-foreground/60">
+						No data yet.
+					</div>
+				) : (
+					<div className="flex-1 min-h-0">
+						<ResponsiveContainer width="100%" height="100%">
+							<PieChart>
+								<Tooltip
+									formatter={(v: number) =>
+										`$${v.toFixed(2)}`
+									}
+									contentStyle={{
+										backgroundColor: "rgba(0,0,0,0.85)",
+										border: "1px solid rgba(255,255,255,0.12)",
+										color: "#fff",
+									}}
+									labelStyle={{
+										color: "rgba(255,255,255,0.9)",
+									}}
+									itemStyle={{
+										color: "rgba(255,255,255,0.9)",
+									}}
+								/>
+								<Pie
+									dataKey="value"
+									data={data}
+									cx="50%"
+									cy="50%"
+									outerRadius={100}
+									label
+								>
+									{data.map((_, idx) => (
+										<Cell
+											key={idx}
+											fill={COLORS[idx % COLORS.length]}
+										/>
+									))}
+								</Pie>
+							</PieChart>
+						</ResponsiveContainer>
+					</div>
+				)}
+				<div className="mt-3 text-sm text-foreground/70">
+					Total: ${total.toFixed(2)}
+				</div>
+			</CardContent>
+		</Card>
+	);
 }
