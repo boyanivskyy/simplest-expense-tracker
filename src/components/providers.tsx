@@ -9,6 +9,7 @@ export default function Providers({ children }: { children: ReactNode }) {
 	const url = process.env.NEXT_PUBLIC_CONVEX_URL;
 	return (
 		<ClerkProvider
+			publishableKey="pk_test_c3dlZXBpbmctcGVsaWNhbi0yMS5jbGVyay5hY2NvdW50cy5kZXYk"
 			appearance={{
 				theme: dark,
 			}}
